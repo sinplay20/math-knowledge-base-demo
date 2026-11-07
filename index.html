@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="浏览数学条目、文献阅读顺序和条目之间的关系。全部内容为虚构演示。">
+  <meta name="color-scheme" content="light">
+  <title>数学知识库 · 交互演示</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%231a4440'/%3E%3Ctext x='20' y='28' text-anchor='middle' font-size='29' fill='white'%3Eℳ%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">跳到主要内容</a>
+  <header class="topbar">
+    <a class="brand" href="#view=item"><span class="brand-icon" aria-hidden="true">ℳ</span><span>数学知识库<small>MATHEMATICAL KNOWLEDGE</small></span></a>
+    <div class="toplinks"><span class="demo-badge">DEMO · 虚构示例</span><a href="https://github.com/sinplay20/math-knowledge-base-demo" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div>
+  </header>
+  <div class="shell">
+    <aside class="sidebar" aria-label="条目导航">
+      <div class="sidebar-intro"><span class="eyebrow">示例文献 / 01</span><h1>Even integers</h1><p>从一份文献，走向相连的数学条目。</p><span class="small-badge">合成演示文献</span></div>
+      <label class="search-label" for="search">搜索条目</label>
+      <div class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="正文、编号或 UUID" autocomplete="off"></div>
+      <label class="sr-only" for="type-filter">条目类型</label><select id="type-filter"><option value="">全部类型</option></select>
+      <div class="list-heading"><span>文献条目</span><span id="result-count" aria-live="polite"></span></div>
+      <nav id="item-list" aria-label="条目列表"></nav>
+      <div class="sidebar-bottom"><span class="dot"></span>只读展示 · 数据来自独立 demo<br><a href="./demo-data.json" download="math-knowledge-base-demo.json">下载示例 JSON ↓</a></div>
+    </aside>
+    <main id="workspace" tabindex="-1">
+      <div class="workspace-heading"><div><div class="eyebrow">知识浏览器</div><h2>读原文，也看见联系。</h2><p>同一条目跨页呈现，原文顺序独立保存。</p></div><div id="stats" class="stats" aria-label="示例统计"></div></div>
+      <div class="toolbar"><div class="view-tabs" role="group" aria-label="查看方式"><button data-view="item" aria-pressed="true">条目详情</button><button data-view="reading" aria-pressed="false">原文顺序</button><button data-view="graph" aria-pressed="false">关系图谱</button></div><label class="relation-filter"><input id="explicit-only" type="checkbox">仅看原文明确关系</label></div>
+      <div id="load-error" class="notice" role="alert" hidden></div>
+      <div id="content" aria-live="polite"><div class="empty">正在载入示例…</div></div>
+      <footer class="workspace-footer"><span>4 个完整条目，一条连续的阅读线索。</span><span id="math-status">公式排版加载中…</span></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="notice">此交互演示需要 JavaScript。你仍可直接查看或下载 <a href="./demo-data.json">示例 JSON</a>。</p></noscript>
+</body>
+</html>

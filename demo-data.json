@@ -1,0 +1,157 @@
+{
+  "format": "math-knowledge-base-public-demo-v1",
+  "items": [
+    {
+      "Original": {
+        "content": {
+          "body": "An integer $n$ is called even if there exists $k\\in\\mathbb{Z}$ such that $n=2k$.",
+          "proof": "",
+          "type": "definition"
+        },
+        "indexing": {
+          "identifier": "Definition 1.1",
+          "location": {
+            "document": "sources/even-integers-demo.pdf",
+            "page": "1",
+            "section": [
+              "Chapter 1. Integers",
+              "1.1 Even integers"
+            ]
+          }
+        },
+        "relations": []
+      },
+      "id": "3252dd78-11d3-48c3-9bab-5f0afcc6a632"
+    },
+    {
+      "Original": {
+        "content": {
+          "body": "Throughout this section, all variables range over the integers.",
+          "proof": "",
+          "type": "statement"
+        },
+        "indexing": {
+          "identifier": "",
+          "location": {
+            "document": "sources/even-integers-demo.pdf",
+            "page": "1",
+            "section": [
+              "Chapter 1. Integers",
+              "1.1 Even integers"
+            ]
+          }
+        },
+        "relations": []
+      },
+      "id": "5aec4520-a8ae-416a-818b-12de2521f470"
+    },
+    {
+      "Original": {
+        "content": {
+          "body": "If $a$ and $b$ are even, then $a+b$ is even.",
+          "proof": "By Definition 1.1, there exist $m,n\\in\\mathbb{Z}$ such that $a=2m$ and $b=2n$.\n\nHence $a+b=2(m+n)$. Since $m+n\\in\\mathbb{Z}$, the sum $a+b$ is even.",
+          "type": "theorem"
+        },
+        "indexing": {
+          "identifier": "Theorem 1.2",
+          "location": {
+            "document": "sources/even-integers-demo.pdf",
+            "page": "2, 5",
+            "section": [
+              "Chapter 1. Integers",
+              "1.1 Even integers"
+            ]
+          }
+        },
+        "relations": [
+          {
+            "basis": "explicit",
+            "explanation": "The proof explicitly invokes Definition 1.1.",
+            "target": "3252dd78-11d3-48c3-9bab-5f0afcc6a632",
+            "type": "depends_on"
+          },
+          {
+            "basis": "inferred",
+            "explanation": "Closure under addition restates the theorem under the given definition. The original does not explicitly assert this equivalence.",
+            "target": "a5af50f1-eabb-41bc-bf7b-25ca7ebcdb12",
+            "type": "equivalent_to"
+          }
+        ]
+      },
+      "id": "6aa3b829-a6dc-4769-86ec-0fe084770034"
+    },
+    {
+      "Original": {
+        "content": {
+          "body": "Thus the set of even integers is closed under addition.",
+          "proof": "",
+          "type": "statement"
+        },
+        "indexing": {
+          "identifier": "",
+          "location": {
+            "document": "sources/even-integers-demo.pdf",
+            "page": "2",
+            "section": [
+              "Chapter 1. Integers",
+              "1.1 Even integers"
+            ]
+          }
+        },
+        "relations": []
+      },
+      "id": "a5af50f1-eabb-41bc-bf7b-25ca7ebcdb12"
+    }
+  ],
+  "orders": [
+    {
+      "document": "sources/even-integers-demo.pdf",
+      "entries": [
+        {
+          "item_id": "5aec4520-a8ae-416a-818b-12de2521f470",
+          "page": "1",
+          "part": "body"
+        },
+        {
+          "item_id": "3252dd78-11d3-48c3-9bab-5f0afcc6a632",
+          "page": "1",
+          "part": "body"
+        },
+        {
+          "item_id": "6aa3b829-a6dc-4769-86ec-0fe084770034",
+          "page": "2",
+          "part": "body"
+        },
+        {
+          "item_id": "a5af50f1-eabb-41bc-bf7b-25ca7ebcdb12",
+          "page": "2",
+          "part": "body"
+        },
+        {
+          "item_id": "6aa3b829-a6dc-4769-86ec-0fe084770034",
+          "page": "5",
+          "part": "proof"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "authors": [],
+      "document": "sources/even-integers-demo.pdf",
+      "edition": "synthetic-demo-1",
+      "id": "even-integers-demo",
+      "kind": "text_pdf",
+      "sha256": null,
+      "synthetic": true,
+      "title": "Even integers (fictional demonstration)"
+    }
+  ],
+  "stats": {
+    "items": 4,
+    "relations": 2,
+    "source_order_parts": 5,
+    "sources": 1
+  },
+  "synthetic": true
+}
