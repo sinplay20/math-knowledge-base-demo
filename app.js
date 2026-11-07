@@ -104,24 +104,36 @@ function graphView(){
   const wrapper=el('div'),card=el('section','card graph-card'),head=el('div','graph-heading');head.append(el('h3','','数学联系，而非阅读先后'));
   const legend=el('div','legend');for(const[key,label]of[['explicit','原文明确'],['inferred','推断']]){const n=el('span');n.append(el('i',key),document.createTextNode(label));legend.append(n);}head.append(legend);card.append(head);
   const stage=el('div','graph-stage');stage.setAttribute('aria-label','条目关系图，箭头从关系记录所在条目指向目标条目');
-  const svg=svgNode('svg',{viewBox:'0 0 800 350',preserveAspectRatio:'none','aria-hidden':'true'}),defs=svgNode('defs',{});
-  for(const[name,color]of[['explicit','#588569'],['inferred','#bb965c']]){const m=svgNode('marker',{id:`arrow-${name}`,markerWidth:'9',markerHeight:'9',refX:'8',refY:'4',orient:'auto',markerUnits:'strokeWidth'});m.append(svgNode('path',{d:'M0,0 L8,4 L0,8 Z',fill:color}));defs.append(m);}svg.append(defs);
   const bodies=entries.filter(e=>e.part==='body'),positions=new Map(bodies.map((e,i)=>[e.item_id,[[20,22],[20,75],[50,46],[80,75]][i]||[50,50]]));
-  for(const edge of currentEdges()){
-    const s=positions.get(edge.source),t=positions.get(edge.target),x1=s[0]*8,y1=s[1]*3.5,x2=t[0]*8,y2=t[1]*3.5,dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy);
-    const line=svgNode('line',{x1:x1+dx/len*80,y1:y1+dy/len*46,x2:x2-dx/len*83,y2:y2-dy/len*47,stroke:edge.basis==='explicit'?'#588569':'#bb965c','stroke-width':'1.6','marker-end':`url(#arrow-${edge.basis})`});
-    if(edge.basis==='inferred')line.setAttribute('stroke-dasharray','5 5');const text=svgNode('text',{x:(x1+x2)/2,y:(y1+y2)/2-10,'text-anchor':'middle'});text.textContent=edge.type;svg.append(line,text);
-  }
-  stage.append(svg);for(const entry of bodies){const item=byId.get(entry.item_id),pos=positions.get(item.id),n=button('',()=>navigate('item',item.id),`graph-node${item.id===state.id?' active':''}`);n.style.left=`${pos[0]}%`;n.style.top=`${pos[1]}%`;n.append(kind(item),el('strong','',item.Original.indexing.identifier||'无标识陈述'),el('small','',item.id));stage.append(n);}
+  for(const entry of bodies){const item=byId.get(entry.item_id),pos=positions.get(item.id),n=button('',()=>navigate('item',item.id),`graph-node${item.id===state.id?' active':''}`);n.dataset.itemId=item.id;n.style.left=`${pos[0]}%`;n.style.top=`${pos[1]}%`;n.append(kind(item),el('strong','',item.Original.indexing.identifier||'无标识陈述'),el('small','',item.id));stage.append(n);}
   card.append(stage,el('p','graph-footer','点击节点查看条目。箭头由关系记录所在条目指向目标；无连线表示未记录关系。等价关系的箭头仅表示记录方向。'));
   const table=el('section','relation-table');table.append(el('h3','',`关系记录 / ${currentEdges().length}`));
   for(const edge of currentEdges()){const row=el('div','edge-row');row.append(basis(edge.basis),button(title(byId.get(edge.source)),()=>navigate('item',edge.source)),el('span','arrow','→'),el('span','relation-type',edge.type),button(title(byId.get(edge.target)),()=>navigate('item',edge.target)),el('p','relation-explanation',edge.explanation||''));table.append(row);}
   card.append(table);wrapper.append(card);return wrapper;
 }
+function drawGraphEdges(){
+  const stage=$('.graph-stage');if(!stage)return;
+  stage.querySelector('svg')?.remove();
+  const bounds=stage.getBoundingClientRect(),width=stage.clientWidth,height=stage.clientHeight;
+  if(!width||!height)return;
+  const svg=svgNode('svg',{viewBox:`0 0 ${width} ${height}`,'aria-hidden':'true'}),defs=svgNode('defs',{});
+  for(const[name,color]of[['explicit','#588569'],['inferred','#bb965c']]){const marker=svgNode('marker',{id:`arrow-${name}`,markerWidth:'9',markerHeight:'9',refX:'8',refY:'4',orient:'auto',markerUnits:'strokeWidth'});marker.append(svgNode('path',{d:'M0,0 L8,4 L0,8 Z',fill:color}));defs.append(marker);}svg.append(defs);
+  const boxes=new Map([...stage.querySelectorAll('.graph-node')].map(node=>{const r=node.getBoundingClientRect();return[node.dataset.itemId,{x:r.left-bounds.left+r.width/2-stage.clientLeft,y:r.top-bounds.top+r.height/2-stage.clientTop,w:r.width,h:r.height}];}));
+  for(const edge of currentEdges()){
+    const s=boxes.get(edge.source),t=boxes.get(edge.target),dx=t.x-s.x,dy=t.y-s.y;
+    const start=Math.min((s.w/2+6)/Math.abs(dx),(s.h/2+6)/Math.abs(dy));
+    const end=Math.min((t.w/2+8)/Math.abs(dx),(t.h/2+8)/Math.abs(dy));
+    const x1=s.x+dx*start,y1=s.y+dy*start,x2=t.x-dx*end,y2=t.y-dy*end;
+    const line=svgNode('line',{x1,y1,x2,y2,stroke:edge.basis==='explicit'?'#588569':'#bb965c','stroke-width':'1.6','marker-end':`url(#arrow-${edge.basis})`});
+    if(edge.basis==='inferred')line.setAttribute('stroke-dasharray','5 5');
+    const text=svgNode('text',{x:(x1+x2)/2,y:(y1+y2)/2-10,'text-anchor':'middle'});text.textContent=edge.type;svg.append(line,text);
+  }
+  stage.prepend(svg);
+}
 function render(){
   if(window.MathJax?.typesetClear)window.MathJax.typesetClear([$('#content')]);renderList();
   for(const tab of document.querySelectorAll('[data-view]'))tab.setAttribute('aria-pressed',String(tab.dataset.view===state.view));
-  $('#content').replaceChildren(state.view==='item'?itemView():state.view==='reading'?readingView():graphView());typeset();
+  $('#content').replaceChildren(state.view==='item'?itemView():state.view==='reading'?readingView():graphView());if(state.view==='graph')drawGraphEdges();typeset();
   if(state.view==='reading')requestAnimationFrame(()=>{$('[data-selected-part]')?.scrollIntoView({block:'nearest'});});
 }
 function typeset(){
@@ -146,7 +158,7 @@ async function init(){
     $('#search').addEventListener('input',e=>{state.query=e.target.value;renderList();});$('#type-filter').addEventListener('change',e=>{state.type=e.target.value;renderList();});
     $('#explicit-only').addEventListener('change',e=>{state.explicitOnly=e.target.checked;render();});
     for(const tab of document.querySelectorAll('[data-view]'))tab.addEventListener('click',()=>navigate(tab.dataset.view));
-    window.addEventListener('hashchange',readHash);readHash();loadMath();
+    window.addEventListener('hashchange',readHash);window.addEventListener('resize',()=>{if(state.view==='graph')drawGraphEdges();});readHash();loadMath();
   }catch(error){$('#content').replaceChildren();$('#load-error').hidden=false;$('#load-error').textContent=`示例数据未能载入（${error.message}）。请通过 HTTP/HTTPS 打开网页，或稍后重试。`;$('#math-status').textContent='';}
 }
 init();
